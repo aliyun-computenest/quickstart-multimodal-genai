@@ -1,131 +1,156 @@
-# Demo服务实例部署文档
 
-## 概述
+# Step-by-Step Guide for Setting Up a GenAI-Multimodal-LLM on Compute Nest
+![Architecture](image-0.png)
+## Introduction
 
-`(服务概述内容)`。
+This tutorial aims to guide you through the establishment of a Multimodal Smart GenAI Assistant Service, leveraging the Qwen LLM and Qwen-VL others on the Compute Nest platform, and integrating Alibaba Cloud's Platform for AI—Elastic Algorithm Service (PAI-EAS), AnalyticDB for PostgreSQL, Intelligent Speech interaction, and ECS for webui.
 
-```
-eg：
+## Prerequisites
 
-Demo服务是计算巢提供的示例。
-本文向您介绍如何开通计算巢上的`Demo`服务，以及部署流程和使用说明。
-```
+- Active Alibaba Cloud account
+- Familiarity with AI models and cloud services
 
-## 计费说明
+## Step 1: Alibaba Cloud Account Preparation
 
-`(计费说明内容)`
+If you haven't already, ensure your registration on Alibaba Cloud by signing up [here](https://www.alibabacloud.com/).
 
-```
-eg:
+## Step 2: Starting with Compute Nest
 
-Demo在计算巢上的费用主要涉及：
+1. Log into your Alibaba Cloud account.
+2. Navigate to Compute Nest and search for "Multimodal Smart GenAI Assistant Service" or the GenAI-Multimodal-LLM. Click "Official Use" to proceed.
+![Select Official Use](image-1.png)
 
-- 所选vCPU与内存规格
-- 系统盘类型及容量
-- 公网带宽
+## Step 3: Configuring Your Service Instance
 
-计费方式包括：
+You need to: 
 
-- 按量付费（小时）
-- 包年包月
+1. Assign a name to your service instance.
+2. Select the ECS (Elastic Computing Services) settings, opting for an ecs.c6.2xlarge for better performance.
+3. Establish a secure password for accessing the instance.
+![Initialize Instance](image-2.png)
 
-目前提供如下实例：
+## Step 4: Launching a PAI-EAS Service with LLM
 
-| 规格族 | vCPU与内存 | 系统盘 | 公网带宽 |
-| --- | --- | --- | --- |
-| ecs.r6.xlarge | 内存型r6，4vCPU 32GiB | ESSD云盘 200GiB PL0 | 固定带宽1Mbps |
+To deploy your LLM on PAI-EAS:
 
-预估费用在创建实例时可实时看到。
-如需更多规格、其他服务（如集群高可用性要求、企业级支持服务等），请联系我们 [mailto:xx@xx.com](mailto:xx@xx.com)。
+1. choose an LLM model that fits your requirements from the available options.
+2. Select the instance type suitable for your needs.
+3. Deploy your model on PAI-EAS, ensuring you save the API endpoint information for future reference.
+![Deploy PAI-EAS Service](image-3.png)
 
-```
+## Step 5: Establishing AnalyticDB for PostgreSQL
 
-## 部署架构
+Configure your vector storage by:
 
-`(部署概述内容)`
+1. Selecting an instance specification for AnalyticDB for PostgreSQL based on the anticipated document load.
+2. Defining the size of the document storage.
+3. Setting "kbsuser" as the default DB username (or choosing another). Avoid using symbols like "@" in passwords.
+![Configure AnalyticDB](image-4.png)
 
-## RAM账号所需权限
+## Step 6: Initialization of Intelligent Speech Interaction
 
-`(权限策略内容)`
+Navigate to the Intelligent Speech Interaction service within your Alibaba Cloud console.
+Add a configuration by entering your Alibaba Cloud account:
+- AccessKey pair: AccessKey and SecretKey.  <a href="https://www.alibabacloud.com/help/en/ram/user-guide/create-an-accesskey-pair">How to get an AccessKey pair</a>
+- API token. The Automatic Speech Recognition (ASR) or Speech-To-Text (STT) solution uses <a href= "https://www.alibabacloud.com/en/product/intelligent-speech-interaction">Intelligent Speech Interaction</a>. To use it, you need to create a project ( <a href= "https://www.alibabacloud.com/help/en/isi/create-a-project#2572188">details here</a>) and obtain the project's appkey (<a href= "https://www.alibabacloud.com/help/en/isi/getting-started/obtain-an-access-token#topic-2572193">details here</a>).
+   
+![API-Keys](image-6.png)
 
-```
-eg: 
+## Step 7: Incorporating Modelstudio or Dashscope API
 
-Demo服务需要对ECS、VPC等资源进行访问和创建操作，若您使用RAM用户创建服务实例，需要在创建服务实例前，对使用的RAM用户的账号添加相应资源的权限。添加RAM权限的详细操作，请参见[为RAM用户授权](https://help.aliyun.com/document_detail/121945.html)。所需权限如下表所示。
+Obtain the Model Studio or Dashscope API endpoint for the Qwen-VL model from the Alibaba Cloud console.
+Integrate the API endpoint into your service to call the Qwen-VL model as part of your assistant's capabilities. 
 
+The Qwen-VL model transitioned to using ModelStudio API. We currently use <a href="https://dashscope.aliyun.com/"> Dashscope </a> API; <a href="https://help.aliyun.com/zh/dashscope/support/faq?disableWebsiteRedirect=true">see here for how to access it</a>.
 
-| 权限策略名称 | 备注 |
-| --- | --- |
-| AliyunECSFullAccess | 管理云服务器服务（ECS）的权限 |
+## Step 8: Set Image URL
 
-```
+Before proceeding, ensure that you have a valid image URL that you wish to download and use. A valid image URL should:
 
-## 部署流程
+- Start with http:// or https://.
+- End with an image file extension such as .png, .jpg, .jpeg, or .bmp.
+To confirm the URL's validity, you can test it in a web browser. The image should be displayed directly in the browser if the URL is correct. After it, feel free to put the picture URL to the ImageURL field.
 
-### 部署步骤
+## Step 9: Network and WebUI Configuration
 
-`(部署步骤内容)`
+1. Assign a username for web UI access, with "admin" as the default option.
+2. Create a strong password for enhanced security.
+![Assign a username for web UI access](image-5.png)
 
-```
-eg:
+3. For VPC configuration, either select an existing VPC or furnish new VPC details if required.
+4. Proceed by clicking "Next: Confirm Order."
+![Network Configuration](image-7.png)
 
-1. 单击部署链接，进入服务实例部署界面，根据界面提示，填写参数完成部署。
-2. 补充示意图。
-```
-### 部署参数说明
+## Step 10: Deploying Your GenAI Assistant Service
 
-`(部署参数说明内容)`
+Please review all settings, agree to the "Terms of Service," and deploy your service by selecting "Create Now." Please be patient as the service initiates.
+![Launch Service](image-8.png)
 
-```
-eg:
+## Utilizing the GenAI Assistant Service
 
-您在创建服务实例的过程中，需要配置服务实例信息。下文介绍云XR实时渲染平台服务实例输入参数的详细信息。
+Web UI is tailored to help you upload and manage various document types, images, and audio files and easily extract insights and answers from your content through an interactive AI assistant. Follow this guide to navigate our Web UI and make the most out of your experience.
 
-| 参数组 | 参数项 | 示例 | 说明 |
-| --- | --- | --- | --- |
-| 服务实例名称 |  | test | 实例的名称 |
-| 地域 |  | 华北2（北京） | 选中服务实例的地域，建议就近选中，以获取更好的网络延时。 |
-```
+![Web UI](image-10.png)
 
-### 验证结果
+### Uploading Documents
+Our platform supports various document types as a knowledge base, including DOCX, PDF, XLSX, and TXT. Here's how to upload documents and get started:
 
-`(验证结果内容)`
+1. **Locate the Upload Section:** Below the introduction, on the left side of the web UI, you should find an upload interface: "Upload Document" designated explicitly for documents.
+![Upload File Panel](image-11.png)
 
-```
-eg:
+2. **Select Your File:** Click on the "Click to Upload" button or drag and drop your document directly into the highlighted area.
+3. **Wait for Completion:** The system will now upload the document. A progress bar or an icon will indicate the upload status. Wait until the document is completely uploaded.
+4. **Confirmation:** Once uploaded, a confirmation message may appear, or the file may be listed in your knowledge base.
+![Upload Success](image-12.png)
 
-1. 查看服务实例。服务实例创建成功后，部署时间大约需要2分钟。部署完成后，页面上可以看到对应的服务实例。 
-2. 通过服务实例访问TuGraph。进入到对应的服务实例后，可以在页面上获取到web、rpc、ssh共3种使用方式。
-```
+### Asking Questions
+After uploading the document, you can interact with the GenAI Smart Assistant:
 
-### 使用Demo
+1. **Navigate to the assistant:** Find the input field or section where you can enter your questions.
+2. **Type Your Question:** Enter any question related to the uploaded document. For example, "What is the main topic of the third chapter in the uploaded text?"
+3. **Submit:** Press the">" button or hit Enter to submit your question.
+4. **View the Answer:** The assistant will process your question and provide an answer, usually displayed below the input box.
+![Conversation with GenAI](image-13.png)
 
-`(服务使用说明内容)`
+### Uploading Images
+You can talk with image by attaching a picture and ask questions about them:
 
-```
-eg:
+1. **Find the Image Upload:** Locate the section for text input and find button "+".
+![Talk with Image](image-14.png)
 
-请访问Demo官网了解如何使用：[使用文档](https://www.aliyun.com)
-```
+2. **Upload Your Image:** Click on the "+" button and attach your image to the text (the question related data on the image). Acceptable formats typically include JPEG, PNG, and others.
+![Uploaded Image](image-15.png)
+3. **Ask Questions:** Once your image is uploaded, use the assistant's input field to ask questions about its content or context. Press the">" button or hit Enter to submit it.
 
-## 问题排查
+![Result](image-16.png)
+![Result](image-17.png)
 
-`(服务使用说明内容)`
+### Uploading Audio Files
+Our platform allows you to upload audio files and inquire about the contained knowledge:
 
-```
-eg:
+1. **Audio Upload Section:** Locate the section for text input and find button "+".
+![Audio Talk](image-14.png)
+2. **Select and Upload Audio:** Choose your audio file by clicking "Choose File." Supported formats include MP3, WAV, and more.
+3. **Ask Related Questions:** After uploading your audio file, press the">" button or hit Enter to submit it.
 
-请访问[Demo的问题排查链接](https://www.aliyun.com)获取帮助。
-```
+### Tips for Smooth Operation
 
-## 联系我们
+- Ensure your files are in the correct format and within the size limits specified by the platform.
+- If the upload fails, check your internet connection and confirm whether the file meets the platform's requirements.
+- When asking questions, be as clear and specific as possible to help the AI provide more accurate answers.
+- If the answer isn't what you were looking for, refine your question or provide more context.
 
-欢迎访问Demo官网（[https://www.aliyun.com](https://www.aliyun.com)）了解更多信息。
+Remember, this is a powerful tool that leverages cutting-edge artificial intelligence to assist you. As such, the quality of the outputs heavily depends on the inputs you provide. Happy querying!
 
-联系邮箱：[https://www.aliyun.com](mailto:https://www.aliyun.com)
+- **General Query Handling:** Users can input inquiries through the Web UI interface and receive responses from the LLM.
+- **Document Management for Enhanced Retrieval:** Allow users to upload documents to AnalyticDB for PostgreSQL for retrieval augmentation.
+- **Service Modification Access:** Authorized individuals can manage and modify the service via ECS.
 
-社区版开源地址：[https://github.com/](https://github.com/)
+## Additional Resources
 
-扫码关注微信公众号，技术博客、活动通知不容错过：
+Explore more about setting up and managing your Multimodal Smart GenAI Assistant Service by referring to:
 
-`(添加二维码图片)`
+- [Compute Nest Documentation](https://www.alibabacloud.com/)
+- [Alibaba Cloud PAI-EAS User Guide](https://www.alibabacloud.com/)
+- [AnalyticDB for PostgreSQL Resources](https://www.alibabacloud.com/)
+
